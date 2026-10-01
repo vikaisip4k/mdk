@@ -1,0 +1,94 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.linear_model import LinearRegression
+
+f = lambda x: (x - 3) ** 2
+df = lambda x: 2 * (x - 3)
+
+x = 10.0
+lr = 0.1
+path = []
+
+for i in range(30):
+    path.append(x)
+    x = x - lr * df(x)
+
+print(x)
+
+xs = np.linspace(-2, 12, 100)
+
+plt.plot(xs, f(xs))
+plt.scatter(path, [f(p) for p in path])
+plt.show()
+
+print("--------------------")
+
+lrs = [0.01, 0.1, 1.1]
+
+fig, ax = plt.subplots(1, 3, figsize=(12, 4))
+
+for j, lr in enumerate(lrs):
+    x = 10.0
+    path = []
+
+    for i in range(30):
+        path.append(x)
+        x = x - lr * df(x)
+
+    ax[j].plot(xs, f(xs))
+    ax[j].scatter(path, [f(p) for p in path])
+    ax[j].set_title(f'lr = {lr}')
+
+plt.tight_layout()
+plt.show()
+
+rng = np.random.default_rng(0)
+
+X = rng.uniform(0, 5, 50)
+y = 2 * X + 1 + rng.normal(0, 0.5, 50)
+
+plt.scatter(X, y)
+plt.show()
+
+def loss(w, b):
+    return np.mean((w * X + b - y) ** 2)
+
+def grads(w, b):
+    p = w * X + b
+    return np.mean(2 * (p - y) * X), np.mean(2 * (p - y))
+
+print(loss(0, 0))
+print(grads(0, 0))
+
+print("--------------------")
+
+w = 0.0
+b = 0.0
+lr = 0.05
+hist = []
+
+for i in range(200):
+    dw, db = grads(w, b)
+    w -= lr * dw
+    b -= lr * db
+    hist.append(loss(w, b))
+
+print(w, b)
+
+plt.plot(hist)
+plt.show()
+
+plt.scatter(X, y)
+plt.plot(X, w * X + b)
+plt.show()
+
+print("--------------------")
+
+model = LinearRegression()
+model.fit(X.reshape(-1, 1), y)
+
+print(model.coef_[0])
+print(model.intercept_)
+
+print(w, b)
