@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
 from sklearn.linear_model import LinearRegression
 
 f = lambda x: (x - 3) ** 2
@@ -54,7 +53,7 @@ plt.show()
 def loss(w, b):
     return np.mean((w * X + b - y) ** 2)
 
-def grads(w, b):
+def grads(w, b):                                    
     p = w * X + b
     return np.mean(2 * (p - y) * X), np.mean(2 * (p - y))
 
